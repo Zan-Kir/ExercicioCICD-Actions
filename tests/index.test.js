@@ -29,4 +29,6 @@ describe('GET /api/users', () => {
   });
 });
 
+console.log('Iniciando os testes...');
+
 jest.setTimeout(30000); 
