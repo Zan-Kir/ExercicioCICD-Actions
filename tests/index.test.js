@@ -29,4 +29,6 @@ describe('GET /api/users', () => {
   });
 });
 
+console.log('Devera haver conflito de merge aqui!');
+
 jest.setTimeout(30000); 
