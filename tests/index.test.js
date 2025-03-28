@@ -31,4 +31,6 @@ describe('GET /api/users', () => {
 
 console.log('Iniciando os testes...');
 
+console.log('Devera haver conflito de merge aqui!'); // Mudei a linha para resolver o conflito
+
 jest.setTimeout(30000); 
