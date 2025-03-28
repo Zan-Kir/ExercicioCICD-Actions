@@ -18,14 +18,17 @@ describe('GET /api/test', () => {
   });
 });
 
-/*
-describe('GET /api/test', () => {
-  it('should return a test message', async () => {
-    const res = await request(app).get('/api/test-2');
+describe('GET /api/users', () => {
+  it('should return a list of users', async () => {
+    const res = await request(app).get('/api/users');
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('message', 'Endpoint de teste 2');
+    expect(res.body).toEqual([
+      { id: 1, name: 'Usuário 1' },
+      { id: 2, name: 'Usuário 2' }
+    ]);
   });
 });
-*/
+
+console.log('Devera haver conflito de merge aqui!');
 
 jest.setTimeout(30000); 
