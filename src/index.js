@@ -17,8 +17,8 @@ app.get('/api/test-2', (req, res) => {
   res.send({ message: 'Branch master endpoint teste 2'});
 });
 
-app.listen(port, () => {
-  console.log(`Listening http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Listening http://localhost:${port}`);
+// });
 
 module.exports = app;
