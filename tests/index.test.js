@@ -18,6 +18,16 @@ describe('GET /api/test', () => {
   });
 });
 
+describe('GET /api/test-2', () => {
+  it('should return the correct message object', async () => {
+    const res = await request(app).get('/api/test-2');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual({ 
+      message: 'Branch master endpoint teste 2'
+    });
+  });
+});
+
 describe('GET /api/users', () => {
   it('should return a list of users', async () => {
     const res = await request(app).get('/api/users');
