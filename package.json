@@ -15,7 +15,11 @@
   "author": "Fatec Votorantim - DSM",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "dotenv": "^16.0.3",
+    "mysql2": "^3.3.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
