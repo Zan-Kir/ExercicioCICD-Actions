@@ -53,7 +53,10 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM users', (err, results) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error('Erro ao buscar usuários:', err);
+      return res.status(500).json({ error: 'Erro ao buscar usuários', details: err.message });
+    }
     res.json(results);
   });
 });
