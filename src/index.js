@@ -36,7 +36,7 @@ const swaggerOptions = {
       description: 'CRUD de usuários com MySQL'
     }
   },
-  apis: ['server.js']
+  apis: ['./src/index.js']
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
@@ -141,6 +141,27 @@ app.delete('/users/:id', (req, res) => {
     if (err) return res.status(500).send(err);
     res.status(204).send();
   });
+});
+
+/**
+ * @swagger
+ * /mensagem:
+ *   get:
+ *     summary: Retorna uma mensagem personalizada
+ *     responses:
+ *       200:
+ *         description: Mensagem personalizada
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Fatec DSM
+ */
+app.get('/mensagem', (req, res) => {
+  res.send(process.env.APP_MESSAGE || 'Mensagem padrão');
+  if(process.env.NODE_ENV === 'development') {
+    console.log(`Segredo de dev: ${process.env.JWT_SECRET}`);
+  }
 });
 
 app.listen(port, () => {
