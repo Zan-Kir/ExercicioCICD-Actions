@@ -49,6 +49,17 @@ jobs:
       - name: Run linter
         run: npm run lint || true
 
+      - name: Aguarda MySQL estar pronto
+        run: |
+          for i in {1..10}; do
+            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL está pronto!"
+              break
+            fi
+            echo "Aguardando MySQL..."
+            sleep 3
+          done
+
       - name: Run tests
         run: npm test
 
