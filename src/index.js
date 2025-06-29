@@ -164,7 +164,11 @@ app.get('/mensagem', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-  console.log(`Swagger em http://localhost:${port}/swagger`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Swagger em http://localhost:${port}/swagger`);
+  });
+}
+
+module.exports = app;
