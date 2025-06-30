@@ -217,6 +217,7 @@ jobs:
                 {"key":"POSTGRES_USER","value":"${{ secrets.POSTGRES_USER }}"},
                 {"key":"POSTGRES_PASSWORD","value":"${{ secrets.POSTGRES_PASSWORD }}"},
                 {"key":"POSTGRES_DB","value":"${{ secrets.POSTGRES_DB }}"},
+                {"key":"POSTGRES_PORT","value":"${{ secrets.POSTGRES_PORT }}"},
                 {"key":"JWT_SECRET","value":"${{ secrets.JWT_SECRET }}"},
                 {"key":"APP_MESSAGE","value":"${{ secrets.APP_MESSAGE }}"}
               ]
