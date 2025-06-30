@@ -1,3 +1,6 @@
+# Link Swagger no Render
+exercicio-cicd-api.onrender.com/swagger
+
 # Docker - Comandos Úteis para API
 
 Este arquivo contém uma lista de comandos Docker com descrições para facilitar o gerenciamento da sua API containerizada.

@@ -158,6 +158,16 @@ jobs:
           to: ${{secrets.EMAIL_DESTINO}}
           from: ${{secrets.EMAIL_ORIGEM}}
 
+      - name: Debug secrets
+        run: |
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}"
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}"
+          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}"
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
+          echo "APP_MESSAGE=${{ secrets.APP_MESSAGE }}"
+
   cd:
     name: CD
     runs-on: ubuntu-latest
@@ -217,6 +227,7 @@ jobs:
                 {"key":"POSTGRES_USER","value":"${{ secrets.POSTGRES_USER }}"},
                 {"key":"POSTGRES_PASSWORD","value":"${{ secrets.POSTGRES_PASSWORD }}"},
                 {"key":"POSTGRES_DB","value":"${{ secrets.POSTGRES_DB }}"},
+                {"key":"POSTGRES_PORT","value":"${{ secrets.POSTGRES_PORT }}"},
                 {"key":"JWT_SECRET","value":"${{ secrets.JWT_SECRET }}"},
                 {"key":"APP_MESSAGE","value":"${{ secrets.APP_MESSAGE }}"}
               ]
