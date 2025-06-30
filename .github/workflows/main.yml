@@ -139,6 +139,7 @@ jobs:
             git push origin main --tags
           else
             echo "Nenhuma alteração para commit/tag. Pulando push."
+          fi
 
       - name: Send email on failure
         if: failure()
