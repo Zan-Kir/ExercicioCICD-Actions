@@ -2,10 +2,14 @@ require('dotenv').config();
 
 const express = require('express');
 const { Pool } = require('pg');
-const fetch = require('node-fetch');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const port = 5200;
+
+let fetch;
+(async () => {
+  fetch = (await import('node-fetch')).default;
+})();
 
 const app = express();
 app.use(express.json());
@@ -19,7 +23,7 @@ const db = new Pool({
 });
 
 function sendLogToBetterStack(level, message, meta = {}) {
-  if (!process.env.LOGTAIL_TOKEN) return;
+  if (!process.env.LOGTAIL_TOKEN || !fetch) return;
   const log = {
     dt: new Date().toISOString(),
     level,
