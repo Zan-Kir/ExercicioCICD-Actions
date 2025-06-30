@@ -1,66 +1,80 @@
-# Link Swagger no Render
-exercicio-cicd-api.onrender.com/swagger
+# API - Exercicio CICD
 
-# Docker - Comandos Úteis para API
+## Link do Swagger
 
-Este arquivo contém uma lista de comandos Docker com descrições para facilitar o gerenciamento da sua API containerizada.
+Acesse a documentação da API pelo Swagger:
 
-## Comandos
+➡️ [exercicio-cicd-api.onrender.com/swagger](https://exercicio-cicd-api.onrender.com/swagger)
 
-### 1. Construir a imagem Docker
+---
+
+## Como Executar a API
+
+### 1. Usando Docker Compose (Recomendado)
+
+Execute o comando abaixo na raiz do projeto para subir a aplicação e suas dependências:
+
+```bash
+docker-compose up -d
+```
+
+- Para parar e remover os containers:
+
+```bash
+docker-compose down
+```
+
+---
+
+### 2. Usando Docker Manualmente
+
+#### a) Construir a imagem Docker
 
 ```bash
 docker build -t img-api .
 ```
 
-**Descrição:** Cria uma imagem Docker chamada `img-api` a partir do `Dockerfile` localizado no diretório atual.
+Cria uma imagem chamada `img-api` a partir do `Dockerfile`.
 
----
-
-### 2. Executar o container
+#### b) Executar o container
 
 ```bash
 docker run --name cont-api -p 5200:5200 img-api
 ```
 
-**Descrição:** Executa a imagem `img-api` criando um container chamado `cont-api` e mapeando a porta 5200 do host para a porta 5200 do container.
+Cria e executa o container `cont-api`, mapeando a porta 5200.
 
----
-
-### 3. Remover o container
+#### c) Remover o container
 
 ```bash
 docker rm -f cont-api
 ```
 
-**Descrição:** Força a parada e remove o container chamado `cont-api`.
+Remove o container `cont-api` (forçado).
 
----
-
-### 4. Remover a imagem Docker
+#### d) Remover a imagem Docker
 
 ```bash
 docker rmi img-api
 ```
 
-**Descrição:** Remove a imagem Docker chamada `img-api` do sistema.
+Remove a imagem `img-api`.
 
----
-
-### 5. Ver logs do container
+#### e) Ver logs do container
 
 ```bash
 docker logs cont-api
 ```
 
-**Descrição:** Exibe os logs gerados pelo container `cont-api`.
+Exibe os logs do container `cont-api`.
 
 ---
 
-## Observações
+## Observações Importantes
 
-* Certifique-se de que nenhuma outra aplicação esteja utilizando a porta 5200.
-* Para reconstruir a imagem após alterações, remova a imagem antiga com `docker rmi` ou utilize a flag `--no-cache` na construção.
+- Certifique-se de que nenhuma outra aplicação esteja usando a porta 5200.
+- Para reconstruir a imagem após alterações, remova a imagem antiga com `docker rmi` ou use a flag `--no-cache` ao buildar.
+- O uso do Docker Compose facilita o gerenciamento de múltiplos serviços e dependências.
 
 ---
 
