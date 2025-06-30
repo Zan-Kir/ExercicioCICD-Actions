@@ -19,7 +19,6 @@ const db = new Pool({
 });
 
 const logtail = new Logtail(process.env.BETTER_STACK_LOGS);
-logtail.attachConsole();
 
 db.query(`
   CREATE TABLE IF NOT EXISTS users (
