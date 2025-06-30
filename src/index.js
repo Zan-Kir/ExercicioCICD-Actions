@@ -36,7 +36,7 @@ const swaggerOptions = {
       description: 'CRUD de usuários com MySQL'
     }
   },
-  apis: ['server.js']
+  apis: ['./src/index.js']
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
@@ -53,7 +53,10 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM users', (err, results) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error('Erro ao buscar usuários:', err);
+      return res.status(500).json({ error: 'Erro ao buscar usuários', details: err.message });
+    }
     res.json(results);
   });
 });
@@ -143,7 +146,32 @@ app.delete('/users/:id', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-  console.log(`Swagger em http://localhost:${port}/swagger`);
+/**
+ * @swagger
+ * /mensagem:
+ *   get:
+ *     summary: Retorna uma mensagem personalizada
+ *     responses:
+ *       200:
+ *         description: Mensagem personalizada
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Fatec DSM
+ */
+app.get('/mensagem', (req, res) => {
+  res.send(process.env.APP_MESSAGE || 'Mensagem padrão');
+  if(process.env.NODE_ENV === 'development') {
+    console.log(`Segredo de dev: ${process.env.JWT_SECRET}`);
+  }
 });
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Swagger em http://localhost:${port}/swagger`);
+  });
+}
+
+module.exports = app;
