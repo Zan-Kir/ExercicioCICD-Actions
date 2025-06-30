@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
+const { Pool } = require('pg');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const port = 5200;
@@ -8,23 +8,24 @@ const port = 5200;
 const app = express();
 app.use(express.json());
 
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-  port: process.env.MYSQL_PORT
+const db = new Pool({
+  host: process.env.POSTGRES_HOST,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
+  port: process.env.POSTGRES_PORT
 });
 
-db.connect(err => {
-  if (err) throw err;
-  console.log('Conectado ao MySQL!');
-  db.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255),
-      email VARCHAR(255)
-    )`);
+db.query(`
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255)
+  )
+`).then(() => {
+  console.log('Conectado ao PostgreSQL!');
+}).catch(err => {
+  console.error('Erro ao conectar ao PostgreSQL:', err);
 });
 
 const swaggerOptions = {
@@ -33,7 +34,7 @@ const swaggerOptions = {
     info: {
       title: 'User API',
       version: '1.0.0',
-      description: 'CRUD de usuários com MySQL'
+      description: 'CRUD de usuários com PostgreSQL'
     }
   },
   apis: ['./src/index.js']
@@ -51,14 +52,14 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *       200:
  *         description: Lista de usuários
  */
-app.get('/users', (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      console.error('Erro ao buscar usuários:', err);
-      return res.status(500).json({ error: 'Erro ao buscar usuários', details: err.message });
-    }
-    res.json(results);
-  });
+app.get('/users', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM users');
+    res.json(rows);
+  } catch (err) {
+    console.error('Erro ao buscar usuários:', err);
+    res.status(500).json({ error: 'Erro ao buscar usuários', details: err.message });
+  }
 });
 
 /**
@@ -82,12 +83,14 @@ app.get('/users', (req, res) => {
  *       201:
  *         description: Usuário criado
  */
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
   const { name, email } = req.body;
-  db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email], (err, result) => {
-    if (err) return res.status(500).send(err);
-    res.status(201).json({ id: result.insertId, name, email });
-  });
+  try {
+    const result = await db.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id', [name, email]);
+    res.status(201).json({ id: result.rows[0].id, name, email });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 /**
@@ -116,12 +119,14 @@ app.post('/users', (req, res) => {
  *       200:
  *         description: Usuário atualizado
  */
-app.put('/users/:id', (req, res) => {
+app.put('/users/:id', async (req, res) => {
   const { name, email } = req.body;
-  db.query('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, req.params.id], (err) => {
-    if (err) return res.status(500).send(err);
+  try {
+    await db.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, req.params.id]);
     res.json({ id: req.params.id, name, email });
-  });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 /**
@@ -139,11 +144,13 @@ app.put('/users/:id', (req, res) => {
  *       204:
  *         description: Usuário removido
  */
-app.delete('/users/:id', (req, res) => {
-  db.query('DELETE FROM users WHERE id = ?', [req.params.id], (err) => {
-    if (err) return res.status(500).send(err);
+app.delete('/users/:id', async (req, res) => {
+  try {
+    await db.query('DELETE FROM users WHERE id = $1', [req.params.id]);
     res.status(204).send();
-  });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 /**

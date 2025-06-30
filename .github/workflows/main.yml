@@ -17,17 +17,16 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql
+      postgres:
+        image: postgres
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE}}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -49,14 +48,14 @@ jobs:
       - name: Run linter
         run: npm run lint || true
 
-      - name: Aguarda MySQL estar pronto
+      - name: Aguarda PostgreSQL estar pronto
         run: |
           for i in {1..10}; do
-            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
-              echo "MySQL está pronto!"
+            if pg_isready -h 127.0.0.1 -U ${{ secrets.POSTGRES_USER }}; then
+              echo "PostgreSQL está pronto!"
               break
             fi
-            echo "Aguardando MySQL..."
+            echo "Aguardando PostgreSQL..."
             sleep 3
           done
 
@@ -214,10 +213,10 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{
               "envVars": [
-                {"key":"MYSQL_HOST","value":"${{ secrets.MYSQL_HOST }}"},
-                {"key":"MYSQL_USER","value":"${{ secrets.MYSQL_USER }}"},
-                {"key":"MYSQL_PASSWORD","value":"${{ secrets.MYSQL_PASSWORD }}"},
-                {"key":"MYSQL_DATABASE","value":"${{ secrets.MYSQL_DATABASE }}"},
+                {"key":"POSTGRES_HOST","value":"${{ secrets.POSTGRES_HOST }}"},
+                {"key":"POSTGRES_USER","value":"${{ secrets.POSTGRES_USER }}"},
+                {"key":"POSTGRES_PASSWORD","value":"${{ secrets.POSTGRES_PASSWORD }}"},
+                {"key":"POSTGRES_DB","value":"${{ secrets.POSTGRES_DB }}"},
                 {"key":"JWT_SECRET","value":"${{ secrets.JWT_SECRET }}"},
                 {"key":"APP_MESSAGE","value":"${{ secrets.APP_MESSAGE }}"}
               ]
